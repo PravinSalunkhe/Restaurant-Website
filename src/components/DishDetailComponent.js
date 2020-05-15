@@ -2,13 +2,32 @@ import React,{Component} from 'react';
 import {Button, Modal,ModalHeader,ModalBody, Card, Row, Label, Col,CardImg, CardText, CardBody, CardTitle,BreadcrumbItem,Breadcrumb } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {Control , LocalForm, Errors} from 'react-redux-form';
+import {Loading} from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength=(len) => (val) => !(val) || (val.length <= len);
 const minLength=(len) => (val) => (val) && (val.length >= len);
 
-    function RenderDish({dish}) {
-        if(dish!=null) {
+    function RenderDish({dish,isLoading,errMess}) {
+        if(isLoading){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            )
+        }
+        else if(errMess) {
+            return(
+                <div className="container">
+                    <div className="row">
+                        <h4>{errMess}</h4>
+                    </div>
+                </div>
+            )
+        }
+        else if(dish!=null) {
             return (
                 <Card>
                     <CardImg top src={dish.image} alt={dish.name} />
@@ -79,7 +98,7 @@ const minLength=(len) => (val) => (val) && (val.length >= len);
                     </div>    
                 <div className="row">  
                     <div className="col-12 col-md-5 m-1">
-                        < RenderDish dish= {props.dish} />
+                        < RenderDish dish= {props.dish} isLoading={props.isLoading} errMess={props.errMess} />
                     </div>
                     <div className="col-12 col-md-5 m-1">
                         < RenderComments comments = {props.comments}
